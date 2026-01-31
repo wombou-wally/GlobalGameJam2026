@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
@@ -6,13 +7,15 @@ using UnityEngine.UI;
 namespace UI
 {
     // This class will manage update to BoardMember instances, company name text, clock, deal button, sliders, etc. 
-    public class UIController : MonoBehaviour 
+    public class UIController : MonoBehaviour
     {
+        public static UIController Instance { get; private set; }
+        
         [SerializeField] private List<BoardMemberData> _memberData;
         
         [SerializeField] private TextMeshProUGUI companyName;
 
-        [SerializeField] private List<BoardMember> boardMembers;
+        [SerializeField] private List<BoardMemberUI> boardMembers;
 
         [SerializeField] private Clock clock;
 
@@ -23,6 +26,16 @@ namespace UI
         private void Awake()
         {
            Init(); 
+        }
+
+        private void OnEnable()
+        {
+            GameController.OnDealUpdated += HandleProposalUpdates;
+        }
+
+        private void OnDisable()
+        {
+            GameController.OnDealUpdated -= HandleProposalUpdates;
         }
 
         /// <summary>
@@ -44,6 +57,18 @@ namespace UI
             {
                boardMembers[i].Init(boardMemberCopies[i]); 
             }
+        }
+
+        public List<Tuple<ResourceType,float>> GetCurrentSliderValues()
+        {
+            List<Tuple<ResourceType, float>> values = new List<Tuple<ResourceType, float>>();
+            sliders.GetSliders().ForEach(s => values.Add(new Tuple<ResourceType, float>(s.GetType(), s.GetValue())));
+            return values;
+        }
+
+        private void HandleProposalUpdates()
+        {
+           // TODO - this is where we'll update the UI to reflect current happiness level of the board members - David M. 
         }
     }
 }

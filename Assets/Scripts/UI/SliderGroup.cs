@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace UI
@@ -10,6 +11,8 @@ namespace UI
       [SerializeField] 
       private ResourceSlider sliderPrefab;
 
+      private List<ResourceSlider> _sliders;
+      
       private void Awake()
       {
          _rT = GetComponent<RectTransform>();
@@ -28,9 +31,13 @@ namespace UI
             {
                var instance = Instantiate(sliderPrefab, _rT);
                instance.Init((ResourceType) types.GetValue(i), 1000);
+               _sliders.Add(instance);
             } 
-         
          }
       } 
+      
+      public List<ResourceSlider> GetSliders(){
+         return _sliders;
+      }
    }
 }

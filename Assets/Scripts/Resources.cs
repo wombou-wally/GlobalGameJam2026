@@ -17,7 +17,7 @@ public enum BoardMemberType
     Accountant = 4 // likes money the most
 }
 
-public enum BoardMemberStatus
+public enum HappinessLevel
 {
     Mad = 0, 
     Unhappy = 1, 

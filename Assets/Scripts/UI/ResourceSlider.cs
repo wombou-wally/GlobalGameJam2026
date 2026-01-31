@@ -1,3 +1,4 @@
+using System;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -6,20 +7,18 @@ namespace UI
 {
     public class ResourceSlider : MonoBehaviour
     {
-        [SerializeField]
-        private Slider slider;
+        public static event Action<ResourceType, float> OnSliderValueChanged;
+
+        [SerializeField] private Slider slider;
 
         private ResourceType _t;
-    
-        [SerializeField]
-        private TextMeshProUGUI resourceName;
-        
-        [SerializeField]
-        private TextMeshProUGUI currentValue;
 
-        [SerializeField] 
-        private Image sliderFill; 
-    
+        [SerializeField] private TextMeshProUGUI resourceName;
+
+        [SerializeField] private TextMeshProUGUI currentValue;
+
+        [SerializeField] private Image sliderFill;
+
         private string GetStringFormat(ResourceType t)
         {
             return t switch
@@ -40,8 +39,18 @@ namespace UI
                 _ => Color.white
             };
         }
-    
-        public void Init(ResourceType t, float startAmount)
+
+        public ResourceType GetType()
+        {
+            return _t;
+        }
+
+        public float GetValue()
+        {
+            return slider.value;
+        }
+
+    public void Init(ResourceType t, float startAmount)
         {
             _t = t; 
         
@@ -67,11 +76,20 @@ namespace UI
             {
                 sliderFill.color = GetColor(t);
             }
+
+            slider.onValueChanged.AddListener(TriggerChangeEvent);
         }
 
+        private void TriggerChangeEvent(float change)
+        {
+            Debug.Log($"Slider change amount: {change}");
+            OnSliderValueChanged?.Invoke(_t, change);
+        }
+        
         private void Update()
         {
             currentValue.text = slider.value.ToString(GetStringFormat(_t)); 
         }
+        
     }
 }

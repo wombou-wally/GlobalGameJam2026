@@ -1,10 +1,9 @@
-using System;
 using UnityEngine;
 using UnityEngine.UI;
 
 namespace UI
 {
-    public class BoardMember : MonoBehaviour
+    public class BoardMemberUI : MonoBehaviour
     {
         [SerializeField] 
         private Image frame;
@@ -15,9 +14,11 @@ namespace UI
         [SerializeField] 
         private Image currentMask;
 
+        [SerializeField] private Image background;
+        
         private BoardMemberData _d;
         
-        public void Init(BoardMemberData data,  BoardMemberStatus status = BoardMemberStatus.Ok)
+        public void Init(BoardMemberData data,  HappinessLevel status = HappinessLevel.Mad)
         {
             _d = data;
 
@@ -26,6 +27,11 @@ namespace UI
                 frame.color = _d.frameColor;
             }
 
+            if (background != null)
+            {
+                background.color = _d.backgroundColor;
+            }
+            
             if (avatar != null)
             {
                 avatar.sprite = _d.avatar;
@@ -33,8 +39,7 @@ namespace UI
 
             if (currentMask != null)
             {
-                var defaultMask = (int) BoardMemberStatus.Ok;
-                currentMask.sprite = _d.maskSprites[defaultMask]; // default to OK 
+                currentMask.sprite = _d.maskSprites[(int) status]; // default to OK 
             }
         }
         
