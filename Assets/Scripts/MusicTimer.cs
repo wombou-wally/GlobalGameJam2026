@@ -6,10 +6,10 @@ public class MusicTimer : MonoBehaviour
     private float CurrentTime;
     [SerializeField] public AudioSource Music;
 
-    private bool TickingIsPlayed = false;
-    private bool TimesUpIsPlayed = false;
+    //private bool TickingIsPlayed = false;
+    //private bool TimesUpIsPlayed = false;
     private bool IsVolumeLow = false;
-    private bool IsVolumeRestoed = false;
+    private bool IsVolumeRestored = false;
 
     [SerializeField] private float NormalVolume = 1.0f;
     [SerializeField] private float LowVolume = 0.7f;
@@ -34,9 +34,9 @@ public class MusicTimer : MonoBehaviour
             Music.volume = LowVolume;
         }
 
-        if(!IsVolumeRestoed && CurrentTime <= -1f)
+        if(!IsVolumeRestored && CurrentTime <= -1f)
         {
-            IsVolumeRestoed = true;
+            IsVolumeRestored = true;
             Music.volume = NormalVolume;
         }
     }
