@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 namespace UI
 {
-    public class ResourceSlider : MonoBehaviour
+    public class ResourceSlider : MonoBehaviour 
     {
         public static event Action<ResourceType, float> OnSliderValueChanged;
 
@@ -19,9 +19,11 @@ namespace UI
 
         [SerializeField] private Image sliderFill;
 
-        private string GetStringFormat(ResourceType t)
+        [SerializeField] private Image handle; 
+        
+        private string GetStringFormat()
         {
-            return t switch
+            return _t switch
             {
                 ResourceType.Money => "C",
                 ResourceType.Personnel or ResourceType.Facilities => "N0",
@@ -29,18 +31,19 @@ namespace UI
             };
         }
 
-        private Color GetColor(ResourceType t)
+        private Color GetColor()
         {
-            return t switch
+            Debug.Log($"GetColor for type: {_t}");
+            return _t switch
             {
-                ResourceType.Money => new Color(0, 200, 0),
-                ResourceType.Personnel => new Color(200, 0, 0),
-                ResourceType.Facilities => new Color(0, 0, 200),
+                ResourceType.Money => new Color(62.0f, 145.0f, 32.0f, 255.0f),
+                ResourceType.Personnel => new Color(156.0f, 40.0f, 14.0f, 255.0f),
+                ResourceType.Facilities => new Color(12.0f, 50.0f, 148.0f, 255.0f),
                 _ => Color.white
             };
         }
 
-        public ResourceType GetType()
+        public ResourceType GetResourceType()
         {
             return _t;
         }
@@ -50,16 +53,23 @@ namespace UI
             return slider.value;
         }
 
-    public void Init(ResourceType t, float startAmount)
+        public void Refresh(float maxValue)
+        {
+            slider.maxValue = maxValue;
+            slider.normalizedValue = 0.5f; // let's start off in the middle of the range
+            currentValue.text = slider.value.ToString(GetStringFormat());
+        }
+        
+        public void Init(ResourceType t)
         {
             _t = t; 
         
             if (slider != null)
             {
                 // start amount is the max value
-                slider.maxValue = startAmount;
+                slider.maxValue = 0;
                 slider.minValue = 0;
-                slider.value = startAmount;
+                slider.value = 0;
             }
 
             if (resourceName != null)
@@ -67,14 +77,14 @@ namespace UI
                 resourceName.text = t.ToString();
             }
 
-            if (currentValue != null)
-            {
-                currentValue.text = startAmount.ToString(GetStringFormat(t)); 
+            if (sliderFill != null)
+            { 
+                sliderFill.color = GetColor();
             }
 
-            if (sliderFill != null)
+            if (handle != null)
             {
-                sliderFill.color = GetColor(t);
+                handle.color = GetColor();
             }
 
             slider.onValueChanged.AddListener(TriggerChangeEvent);
@@ -82,14 +92,13 @@ namespace UI
 
         private void TriggerChangeEvent(float change)
         {
-            Debug.Log($"Slider change amount: {change}");
             OnSliderValueChanged?.Invoke(_t, change);
         }
         
         private void Update()
         {
-            currentValue.text = slider.value.ToString(GetStringFormat(_t)); 
+            currentValue.text = slider.value.ToString(GetStringFormat());
         }
-        
+       
     }
 }

@@ -23,8 +23,12 @@ public class GameController : MonoBehaviour
         }
 
         playerVC = new VC();
-        
         Instance = this;
+    }
+
+    private void Start()
+    {
+        StartNewDeal();
     }
 
     private void OnEnable()
@@ -37,6 +41,13 @@ public class GameController : MonoBehaviour
         ResourceSlider.OnSliderValueChanged -= OnSliderChanged;
     }
 
+    private void StartNewDeal()
+    {
+        // TODO - do whatever clean up we need - David M. 
+        currentDeal = new Deal();
+        OnNewDealStarted?.Invoke();
+    }
+    
     private void OnSliderChanged(ResourceType t, float amount)
     {
         var sliderValues = UIController.Instance.GetCurrentSliderValues();
@@ -50,12 +61,13 @@ public class GameController : MonoBehaviour
         {
             bool accepted = currentDeal.MakeProposal(offeredMoney, offeredFacilities, offeredPersonnel);
 
+            Debug.Log("Proposal has changed...");
+            
             // TODO - finish handling deal acceptance results - David M. 
             if (accepted)
             {
                 playerVC.AddDeal(currentDeal);
                 OnDealSuccess?.Invoke();
-                
                 // TODO - we should trigger another event to clean up the UI (i.e., repopulate the board members, reset the sliders, and generate a new deal instance - DAM 
             }
             OnDealUpdated?.Invoke();
