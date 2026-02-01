@@ -6,7 +6,7 @@ using UnityEngine.UI;
 
 namespace UI
 {
-    // This class will manage update to BoardMember instances, company name text, clock, deal button, sliders, etc. 
+    // This class manages updates to BoardMemberUI instances, company name text, clock, deal button, sliders, etc. 
     public class UIController : MonoBehaviour
     {
         public static UIController Instance { get; private set; }
@@ -25,17 +25,25 @@ namespace UI
 
         private void Awake()
         {
-           Init(); 
+            if (Instance != null)
+            {
+                Destroy(gameObject);
+            }
+
+            Instance = this;
+            Init(); 
         }
 
         private void OnEnable()
         {
             GameController.OnDealUpdated += HandleProposalUpdates;
+            GameController.OnNewDealStarted += OnNewDealStarted; 
         }
 
         private void OnDisable()
         {
             GameController.OnDealUpdated -= HandleProposalUpdates;
+            GameController.OnNewDealStarted -= OnNewDealStarted;
         }
 
         /// <summary>
@@ -62,13 +70,26 @@ namespace UI
         public List<Tuple<ResourceType,float>> GetCurrentSliderValues()
         {
             List<Tuple<ResourceType, float>> values = new List<Tuple<ResourceType, float>>();
-            sliders.GetSliders().ForEach(s => values.Add(new Tuple<ResourceType, float>(s.GetType(), s.GetValue())));
+            sliders.GetSliders().ForEach(s => values.Add(new Tuple<ResourceType, float>(s.GetResourceType(), s.GetValue())));
             return values;
         }
 
         private void HandleProposalUpdates()
         {
-           // TODO - this is where we'll update the UI to reflect current happiness level of the board members - David M. 
+            // TODO - this is where we'll update the UI to reflect current happiness level of the board members - David M.
+
+            for (var index = 0; index < GameController.Instance.currentDeal.boardMembers.Count; index++)
+            {
+                var happiness = GameController.Instance.currentDeal.boardMembers[index].happinessLevel;
+                Debug.Log($"Happiness is {happiness}");
+                boardMembers[index].SetMask((int) happiness);
+            }
+        }
+
+        private void OnNewDealStarted()
+        {
+            Debug.Log($"The current company name is: {GameController.Instance.currentDeal.companyName}");
+            companyName.text = GameController.Instance.currentDeal.companyName;
         }
     }
 }

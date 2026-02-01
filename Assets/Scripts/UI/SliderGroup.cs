@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace UI
@@ -11,15 +12,32 @@ namespace UI
       [SerializeField] 
       private ResourceSlider sliderPrefab;
 
-      private List<ResourceSlider> _sliders;
+      private Dictionary<ResourceType, ResourceSlider> _sliders;
       
       private void Awake()
       {
          _rT = GetComponent<RectTransform>();
-         _sliders = new List<ResourceSlider>();
+         _sliders = new Dictionary<ResourceType, ResourceSlider>();
          Init();
       }
 
+      private void OnEnable()
+      {
+         GameController.OnNewDealStarted += OnNewDealStarted;
+      }
+
+      private void OnDisable()
+      {
+         GameController.OnNewDealStarted -= OnNewDealStarted;
+      }
+
+      private void OnNewDealStarted()
+      {
+         _sliders[ResourceType.Money].Refresh(GameController.Instance.playerVC.money);
+         _sliders[ResourceType.Facilities].Refresh(GameController.Instance.playerVC.facilities);
+         _sliders[ResourceType.Personnel].Refresh(GameController.Instance.playerVC.employees);
+      }
+      
       // TODO - pass a scriptable obj w/ starting values for each resource type - David M. 
       public void Init()
       {
@@ -31,14 +49,14 @@ namespace UI
             for (int i = 0; i < typeCount; i++)
             {
                var instance = Instantiate(sliderPrefab, _rT);
-               instance.Init((ResourceType) types.GetValue(i), 1000);
-               _sliders.Add(instance);
+               instance.Init((ResourceType) types.GetValue(i));
+               _sliders.Add((ResourceType) types.GetValue(i), instance);
             } 
          }
       } 
       
       public List<ResourceSlider> GetSliders(){
-         return _sliders;
+         return _sliders.Values.ToList();
       }
    }
 }

@@ -18,7 +18,7 @@ namespace UI
         
         private BoardMemberData _d;
         
-        public void Init(BoardMemberData data,  HappinessLevel status = HappinessLevel.Mad)
+        public void Init(BoardMemberData data,  HappinessLevel status = HappinessLevel.Happy)
         {
             _d = data;
 
@@ -42,6 +42,10 @@ namespace UI
                 currentMask.sprite = _d.maskSprites[(int) status]; // default to OK 
             }
         }
-        
+
+        public void SetMask(int index)
+        {
+            currentMask.sprite = _d.maskSprites[index];
+        }
     }
 }

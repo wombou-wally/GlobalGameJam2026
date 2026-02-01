@@ -16,7 +16,8 @@ MonoBehaviour:
   frameColor: {r: 0.3264507, g: 0.5283019, b: 0.33913243, a: 1}
   backgroundColor: {r: 0.25035602, g: 0.5471698, b: 0.26747987, a: 0.92941177}
   maskSprites:
-  - {fileID: 7464383382010289536, guid: 384be70814215b195a2f1269167f5e5a, type: 3}
-  - {fileID: -5750808848453045284, guid: 60a76744e2bff4570b6d3b2e8f56d738, type: 3}
-  - {fileID: 8851489139641355192, guid: 0d89b8f8c153247aa882f2180eaa0bb5, type: 3}
-  - {fileID: 6266176060360064, guid: c1e33ff38756fd16192b0eea29274e3a, type: 3}
+  - {fileID: -4423874356178297010, guid: f499691e602eb76e482dfe75a2c83e10, type: 3}
+  - {fileID: 1064482286289013015, guid: cfbc11c55856715f79018d1d9734cd21, type: 3}
+  - {fileID: 1946982887576977728, guid: 8b13ae451f288bd60b00ce44b9653795, type: 3}
+  - {fileID: 169461663195885698, guid: cb3a52de6fd350e24892968fd96ee612, type: 3}
+  boardMemberType: 4
